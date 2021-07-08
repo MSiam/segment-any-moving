@@ -6,4 +6,4 @@
 	url = https://github.com/achalddave/git-state
 [submodule "detectron_pytorch"]
 	path = detectron_pytorch
-	url = https://github.com/achalddave/segment-any-moving_detectron/
+	url = https://github.com/MSiam/segment-any-moving_detectron
