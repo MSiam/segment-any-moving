@@ -52,7 +52,8 @@ def main():
     if args.model == 'joint':
         detections_args = ['--init-detections-dir', args.detections_dir]
         script = 'tracker/two_detector_track.py'
-        extra_args = ['--remove-continue-overlap', 0.1, '--recursive']
+#        extra_args = ['--remove-continue-overlap', 0.1, '--recursive']
+        extra_args = []
     else:
         detections_args = ['--detections-dir', args.detections_dir]
         script = 'tracker/track_multiple.py'

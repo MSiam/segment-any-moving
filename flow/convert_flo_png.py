@@ -6,13 +6,38 @@ import logging
 import subprocess
 from pathlib import Path
 
-import cv2.optflow
+#import cv2.optflow
 import numpy as np
 from joblib import Parallel, delayed
 from PIL import Image
 from tqdm import tqdm
 
 from utils.log import setup_logging
+import numpy as np
+
+def read_flo_file(filename, memcached=False):
+    """
+    Read from Middlebury .flo file
+    :param flow_file: name of the flow file
+    :return: optical flow data in matrix
+    """
+    if memcached:
+        filename = io.BytesIO(filename)
+    f = open(filename, 'rb')
+    magic = np.fromfile(f, np.float32, count=1)[0]
+    data2d = None
+
+    if 202021.25 != magic:
+        print('Magic number incorrect. Invalid .flo file')
+    else:
+        w = np.fromfile(f, np.int32, count=1)[0]
+        h = np.fromfile(f, np.int32, count=1)[0]
+        data2d = np.fromfile(f, np.float32, count=2 * w * h)
+        # reshape data into 3D array (columns, rows, channels)
+        data2d = np.resize(data2d, (h, w, 2))
+    f.close()
+    return data2d
+
 
 
 def convert_flo_pavel_matlab(flo_dir, output_dir):
@@ -39,8 +64,8 @@ def convert_flo(input_flo_path,
     if not overwrite_existing and (output_image.exists()
                                    and output_metadata.exists()):
         return
-
-    flow = cv2.optflow.readOpticalFlow(str(input_flo_path))
+    #flow = cv2.optflow.readOpticalFlow(str(input_flo_path))
+    flow = read_flo_file(str(input_flo_path))
     flow_x, flow_y = flow[:, :, 0], flow[:, :, 1]
     magnitude = np.sqrt(flow_x**2 + flow_y**2)
     angle = np.arctan2(flow_y, flow_x)

@@ -31,7 +31,7 @@ def main():
     parser.add_argument('--visualize', action='store_true')
     parser.add_argument(
         '--model', choices=['joint', 'appearance', 'motion'], default='joint')
-
+    parser.add_argument('--stages', type=str, default='')
     args = parser.parse_args()
 
     if args.model != 'appearance':
@@ -92,7 +92,8 @@ def main():
         '--save_images', args.visualize,
         '--output_dir', args.output_dir,
         '--quiet',
-        '--recursive'])
+        '--recursive',
+        '--stages', args.stages])
     subprocess_call(cmd + args, cwd=str(detectron_dir))
 
 
